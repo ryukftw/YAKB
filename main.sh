@@ -13,27 +13,27 @@
 # Some Placeholders: [!] [*] [✓] [✗]
 
 # Default defconfig to use for builds.
-export CONFIG=dragonheart_defconfig
+export CONFIG=vendor/kona-perf_defconfig
 
 # Default directory where kernel is located in.
 KDIR=$(pwd)
 export KDIR
 
 # Device name.
-export DEVICE="OnePlus 7 Series"
+export DEVICE="Realme GT Neo 3T"
 
 # Date of build.
 DATE=$(date +"%Y-%m-%d")
 export DATE
 
 # Device codename.
-export CODENAME="op7"
+export CODENAME="RMX3371"
 
 # Builder name.
-export BUILDER="cyberknight777"
+export BUILDER="ryukftw"
 
 # Kernel repository URL.
-export REPO_URL="https://github.com/cyberknight777/dragonheart_kernel_oneplus_sm8150"
+export REPO_URL="https://github.com/ryukftw/android_kernel_realme_sm8250"
 
 # Commit hash of HEAD.
 COMMIT_HASH=$(git rev-parse --short HEAD)
@@ -54,14 +54,14 @@ else
 fi
 
 # Telegram Information. Set 1 to enable. | Set 0 to disable.
-export TGI=1
+export TGI=0
 
 # Number of jobs to run.
 PROCS=$(nproc --all)
 export PROCS
 
 # Compiler to use for builds.
-export COMPILER=clang
+export COMPILER=gcc
 
 # GitHub Token utilized with the gh binary to release kernel builds.
 GH_TOKEN="${PASSWORD}"
@@ -70,7 +70,7 @@ export GH_TOKEN
 # Common directories setup.
 OUT_DIR="${KDIR}/out"
 DIST_DIR="${OUT_DIR}/dist"
-AK3="${KDIR}/anykernel3-dragonheart"
+AK3="${KDIR}/anykernel3-phoeniX"
 
 # Requirements
 if [ "${CI}" == 0 ]; then
@@ -94,6 +94,7 @@ if [[ ${COMPILER} == gcc ]]; then
 	export PATH="${KDIR}"/"${COMPILER}"32/bin:"${KDIR}"/"${COMPILER}"64/bin:/usr/bin/:"${PATH}"
 	MAKE+=(
 		O="${OUT_DIR}"
+		ARCH=arm64
 		CROSS_COMPILE=aarch64-elf-
 		CROSS_COMPILE_ARM32=arm-eabi-
 		LD="${KDIR}"/"${COMPILER}"64/bin/aarch64-elf-"${LINKER}"
@@ -126,7 +127,7 @@ elif [[ ${COMPILER} == clang ]]; then
 fi
 
 if [ ! -d "${AK3}" ]; then
-	git clone --depth=1 https://github.com/cyberknight777/anykernel3 -b "${CODENAME}" "${AK3}" || exit 1
+	git clone --depth=1 https://github.com/ryukftw/AnyKernel3 -b "${CODENAME}" "${AK3}" || exit 1
 fi
 
 if [ ! -f "${KDIR}/version" ]; then
@@ -136,11 +137,11 @@ fi
 
 KBUILD_BUILD_VERSION=$(grep num= version | cut -d= -f2)
 export KBUILD_BUILD_VERSION
-export KBUILD_BUILD_USER="cyberknight777"
+export KBUILD_BUILD_USER="ryukftw"
 export KBUILD_BUILD_HOST="builder"
 VERSION=$(grep ver= version | cut -d= -f2)
 kver="${KBUILD_BUILD_VERSION}"
-zipn=DragonHeart-"${CODENAME}"-"${VERSION}"
+zipn=phoeniX-"${CODENAME}"-"${VERSION}"
 
 # A function to exit on SIGINT.
 exit_on_signal_SIGINT() {
